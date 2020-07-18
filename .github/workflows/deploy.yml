@@ -1,0 +1,25 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - 'feature/dev'
+jobs:
+  gradle:
+    runs-on: ubuntu-latest
+    steps:
+      - if: github.ref == 'refs/heads/feature/dev'
+        run: echo "::set-env name=BUILD_TYPE::Debug"
+
+      - uses: actions/checkout@v2
+
+      - name: Cache dependenci
+        uses: actions/cache@v2
+        with:
+          path: ~/.gradle
+          key: ${{ runner.os }}-gradle-${{ env.GRADLE_VERSION }}-${{ hashFiles('**/*.gradle') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-${{ env.GRADLE_VERSION }}-
+
+      - name: Build apk & deploy dev
+        run: ./gradlew clean uploadDeployGateAt${{ env.BUILD_TYPE }}
