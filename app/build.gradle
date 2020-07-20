@@ -105,3 +105,4 @@ dependencies {
 
 apply from: "ci-kotlin.gradle"
 apply from: "jacoco.gradle"
+//apply from: "deploygate.gradle"
