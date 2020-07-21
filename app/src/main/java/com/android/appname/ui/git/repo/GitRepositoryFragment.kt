@@ -40,7 +40,7 @@ class GitRepositoryFragment : BaseFragment() {
 
     override fun onBindViewModel() = Unit
 
-    private fun initViews() {
+    private fun initViews(){
         rvGitRepo.adapter = adapter
     }
 
