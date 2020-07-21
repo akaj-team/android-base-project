@@ -15,7 +15,7 @@ import java.util.*
 
 open class ApiClient private constructor(url: String? = null) {
 
-    private var token: String? = "db7975f47c82c5edd0e2c781c2457a7262fc5357"
+    private var token: String? = "37cba40ae20a768eb8930f9ddd20fbcffdca8e46"
     private val baseUrl: String = if (url.isNullOrBlank()) BuildConfig.BASE_API_URL else url
 
     companion object : SingletonHolder<ApiClient, String>(::ApiClient)
