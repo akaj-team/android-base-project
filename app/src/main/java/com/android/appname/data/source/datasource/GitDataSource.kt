@@ -4,5 +4,5 @@ import com.android.appname.data.model.GitRepoResponse
 import io.reactivex.Single
 
 interface GitDataSource {
-    fun getRepositories(since: Long): Single<MutableList<GitRepoResponse>>
+    fun getRepositories(since: Long): Single<List<GitRepoResponse>>
 }

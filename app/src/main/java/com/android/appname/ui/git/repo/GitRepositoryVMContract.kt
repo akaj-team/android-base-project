@@ -7,5 +7,5 @@ interface GitRepositoryVMContract {
 
     fun gitRepoList(): List<GitRepoResponse>
 
-    fun getRepositories(since: Long = 1L): Single<MutableList<GitRepoResponse>>
+    fun getRepositories(since: Long = 1L): Single<List<GitRepoResponse>>
 }

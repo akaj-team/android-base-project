@@ -7,5 +7,5 @@ import retrofit2.http.Query
 
 interface ApiService {
     @GET("repositories")
-    fun getRepositories(@Query("since") since: Long): Single<MutableList<GitRepoResponse>>
+    fun getRepositories(@Query("since") since: Long): Single<List<GitRepoResponse>>
 }

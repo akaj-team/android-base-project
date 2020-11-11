@@ -1,10 +1,16 @@
 package com.android.appname.ui.base
 
-import androidx.fragment.app.Fragment
+import com.android.appname.di.MainViewModelFactory
+import dagger.android.support.DaggerFragment
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
+import javax.inject.Inject
 
-abstract class BaseFragment : Fragment() {
+abstract class BaseFragment : DaggerFragment() {
+
+    @Inject
+    protected lateinit var viewModelFactory: MainViewModelFactory
+
     private val subscription: CompositeDisposable = CompositeDisposable()
 
     /**

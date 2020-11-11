@@ -1,14 +1,13 @@
 package com.android.appname.data.source
 
 import com.android.appname.data.source.datasource.GitDataSource
-import com.android.appname.data.source.remote.GitRemoteDataSource
-import com.android.appname.data.model.GitRepoResponse
-import io.reactivex.Single
+import com.android.appname.di.ApplicationModule
+import javax.inject.Inject
 
-class GitRepository : GitDataSource {
-    private val gitRDS = GitRemoteDataSource()
+class GitRepository @Inject constructor(
+    @ApplicationModule.GitRemoteDataSource private val gitRemoteDataSource: GitDataSource,
+    @ApplicationModule.GitLocalDataSource private val gitLocalDataSource: GitDataSource
+) : GitDataSource {
 
-    override fun getRepositories(since: Long): Single<MutableList<GitRepoResponse>> {
-        return gitRDS.getRepositories(since)
-    }
+    override fun getRepositories(since: Long) = gitRemoteDataSource.getRepositories(since)
 }

@@ -15,7 +15,7 @@ import java.util.*
 
 open class ApiClient private constructor(url: String? = null) {
 
-    private var token: String? = "8dcc1542a16daaa11c0ed5c3b7add287fdb28ec1"
+    private var token: String? = "ac408a11f1472afcfa1101fc9d7ac854ed6ca96a"
     private val baseUrl: String = if (url.isNullOrBlank()) BuildConfig.BASE_API_URL else url
 
     companion object : SingletonHolder<ApiClient, String>(::ApiClient)
@@ -31,7 +31,7 @@ open class ApiClient private constructor(url: String? = null) {
             val original = chain.request()
             // Request customization: add request headers
             val requestBuilder = original.newBuilder()
-                .method(original.method(), original.body())
+                .method(original.method, original.body)
             if (!token.isNullOrBlank()) {
                 requestBuilder.addHeader("Authorization", "token $token")
             }
