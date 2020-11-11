@@ -10,4 +10,7 @@ class GitRepository @Inject constructor(
 ) : GitDataSource {
 
     override fun getRepositories(since: Long) = gitRemoteDataSource.getRepositories(since)
+
+    override suspend fun getRepositorySuspend(since: Long) =
+        gitRemoteDataSource.getRepositorySuspend(since)
 }

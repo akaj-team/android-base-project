@@ -8,4 +8,6 @@ object GitRemoteDataSource : GitDataSource {
     private val apiService: ApiService = ApiClient.getInstance(null).service
 
     override fun getRepositories(since: Long) = apiService.getRepositories(since)
+
+    override suspend fun getRepositorySuspend(since: Long) = apiService.getRepositorySuspend(since)
 }

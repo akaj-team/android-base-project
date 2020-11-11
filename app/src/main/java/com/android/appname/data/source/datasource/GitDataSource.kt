@@ -5,4 +5,6 @@ import io.reactivex.Single
 
 interface GitDataSource {
     fun getRepositories(since: Long): Single<List<GitRepoResponse>>
+
+    suspend fun getRepositorySuspend(since: Long): List<GitRepoResponse>
 }

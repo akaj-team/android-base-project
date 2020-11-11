@@ -9,4 +9,6 @@ import io.reactivex.Single
  */
 object GitLocalDataSource : GitDataSource {
     override fun getRepositories(since: Long): Single<List<GitRepoResponse>> = Single.never()
+
+    override suspend fun getRepositorySuspend(since: Long) = emptyList<GitRepoResponse>()
 }
