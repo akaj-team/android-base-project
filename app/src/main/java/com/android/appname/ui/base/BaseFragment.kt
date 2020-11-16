@@ -16,7 +16,7 @@ abstract class BaseFragment : DaggerFragment() {
     /**
      * This function is used to define subscription
      */
-    abstract fun onBindViewModel()
+    open fun onBindViewModel() = Unit
 
     override fun onResume() {
         super.onResume()

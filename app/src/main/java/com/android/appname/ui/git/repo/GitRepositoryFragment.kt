@@ -10,7 +10,6 @@ import com.android.appname.R
 import com.android.appname.ui.base.BaseActivity
 import com.android.appname.ui.base.BaseFragment
 import kotlinx.android.synthetic.main.fragment_git_repo.*
-import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.launch
 
 class GitRepositoryFragment : BaseFragment() {
@@ -31,15 +30,16 @@ class GitRepositoryFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         lifecycleScope.launch {
-            viewModel.getLoadingChannel().consumeEach {
+            viewModel.getLoadingProgress().observe(viewLifecycleOwner) {
                 (activity as? BaseActivity)?.setLoadingDialogVisibility(it)
+            }
+            viewModel.getResultFailureLiveData().observe(viewLifecycleOwner) {
+                it.throwable?.printStackTrace()
             }
         }
         initViews()
         initData()
     }
-
-    override fun onBindViewModel() = Unit
 
     private fun initViews() {
         rvGitRepo.adapter = GitRepoAdapter(viewModel.gitRepoList())

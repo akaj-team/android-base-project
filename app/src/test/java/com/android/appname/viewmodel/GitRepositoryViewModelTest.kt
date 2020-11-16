@@ -61,7 +61,7 @@ class GitRepositoryViewModelTest : BaseTest() {
         val response = mutableListOf<GitRepoResponse>()
         /* When */
         `when`(gitRepository.getRepositories(Mockito.anyLong())).thenReturn(Single.just(response))
-        viewModel.getRepositories(1L).subscribe(testObserver)
+//        viewModel.getRepositories(1L).subscribe(testObserver)
 
         /* Then */
         testObserver.assertValue {

@@ -5,11 +5,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.android.appname.R
-import com.android.appname.data.model.GitRepoResponse
+import com.android.appname.data.entities.RepositoryEntity
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.item_git_repo.view.*
 
-class GitRepoAdapter(private val gitRepoList: List<GitRepoResponse>) :
+class GitRepoAdapter(private val gitRepoList: List<RepositoryEntity>) :
     RecyclerView.Adapter<GitRepoAdapter.GitRepoVH>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GitRepoVH {
@@ -27,12 +27,12 @@ class GitRepoAdapter(private val gitRepoList: List<GitRepoResponse>) :
 
     inner class GitRepoVH(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        fun onBind(repo: GitRepoResponse) {
+        fun onBind(repo: RepositoryEntity) {
             itemView.run {
-                Glide.with(imgAvatar).load(repo.owner.avatarUrl).into(imgAvatar)
+                Glide.with(imgAvatar).load(repo.owner?.avatarUrl).into(imgAvatar)
                 tvTitle.text = repo.name
                 tvDescription.text = repo.description
-                tvOwner.text = repo.owner.login
+                tvOwner.text = repo.owner?.login
             }
         }
     }

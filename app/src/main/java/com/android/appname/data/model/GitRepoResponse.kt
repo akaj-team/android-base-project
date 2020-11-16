@@ -1,8 +1,9 @@
 package com.android.appname.data.model
 
-import com.android.appname.data.model.License
-import com.android.appname.data.model.RepositoryOwner
+import com.android.appname.data.entities.RepositoryEntity
 import com.google.gson.annotations.SerializedName
+import kotlin.reflect.KMutableProperty
+import kotlin.reflect.full.memberProperties
 
 data class GitRepoResponse(
     @SerializedName("id") val id: Long,
@@ -80,4 +81,22 @@ data class GitRepoResponse(
     @SerializedName("watchers") val watchers: Int?,
     @SerializedName("default_branch") val default_branch: String?,
     @SerializedName("score") val score: Float?
-)
+) {
+    fun toEntity() = RepositoryEntity().apply {
+        GitRepoResponse::class.memberProperties.forEach { field ->
+            (RepositoryEntity::class.memberProperties.find { it.name == field.name } as? KMutableProperty<*>)
+                ?.setter
+                ?.call(this, field.get(this@GitRepoResponse)?.let {
+                    when (it) {
+                        is RepositoryOwner -> {
+                            it.toEntity()
+                        }
+                        is License -> {
+                            it.toEntity()
+                        }
+                        else -> it
+                    }
+                })
+        }
+    }
+}

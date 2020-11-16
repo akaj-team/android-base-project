@@ -1,6 +1,9 @@
 package com.android.appname.data.model
 
+import com.android.appname.data.entities.RepositoryOwnerEntity
 import com.google.gson.annotations.SerializedName
+import kotlin.reflect.KMutableProperty
+import kotlin.reflect.full.memberProperties
 
 data class RepositoryOwner(
     @SerializedName("id") val id: Int,
@@ -21,4 +24,12 @@ data class RepositoryOwner(
     @SerializedName("received_events_url") val receivedEventsUrl: String,
     @SerializedName("type") val type: String,
     @SerializedName("site_admin") val siteAdmin: Boolean
-)
+) {
+    fun toEntity() = RepositoryOwnerEntity().apply {
+        RepositoryOwner::class.memberProperties.forEach { field ->
+            (RepositoryOwnerEntity::class.memberProperties.find { it.name == field.name } as? KMutableProperty<*>)
+                ?.setter
+                ?.call(this, field.get(this@RepositoryOwner))
+        }
+    }
+}
