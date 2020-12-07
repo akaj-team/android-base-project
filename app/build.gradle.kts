@@ -4,7 +4,8 @@ plugins {
     id("com.android.application")
     kotlin("android")
     kotlin("kapt")
-    id("kotlin-parcelize")
+    kotlin("android.extensions")
+//    id("kotlin-parcelize")
 }
 
 android {
@@ -40,13 +41,13 @@ android {
         }
     }
 
-    applicationVariants.forEach { variant ->
-        when (variant.name) {
+    this.applicationVariants.all {
+        when (name) {
             "debug" -> {
-                variant.buildConfigField("String", "BASE_API_URL", "\"https://api.github.com/\"")
+                buildConfigField("String", "BASE_API_URL", "\"https://api.github.com/\"")
             }
             "release" -> {
-                variant.buildConfigField("String", "BASE_API_URL", "\"\"")
+                buildConfigField("String", "BASE_API_URL", "\"\"")
             }
         }
     }
@@ -78,7 +79,7 @@ android {
 
 dependencies {
     implementation(fileTree("dir" to "libs", "include" to "*.jar"))
-    implementation("org.jetbrains.kotlin:kotlin-stdlib:${com.android.appname.buildsrc.Libs.Kotlin.VERSION}")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib:${Libs.Kotlin.VERSION}")
     implementation("androidx.core:core-ktx:1.3.2")
     implementation("androidx.appcompat:appcompat:1.2.0")
     implementation("androidx.fragment:fragment-ktx:1.3.0-beta02")
