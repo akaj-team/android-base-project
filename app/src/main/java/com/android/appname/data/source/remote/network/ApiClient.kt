@@ -31,7 +31,7 @@ open class ApiClient private constructor(url: String? = null) {
             val original = chain.request()
             // Request customization: add request headers
             val requestBuilder = original.newBuilder()
-                .method(original.method(), original.body())
+                .method(original.method, original.body)
             if (!token.isNullOrBlank()) {
                 requestBuilder.addHeader("Authorization", "token $token")
             }
