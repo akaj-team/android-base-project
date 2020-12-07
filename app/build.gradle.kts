@@ -1,8 +1,10 @@
+import com.android.appname.buildsrc.Libs
+
 plugins {
     id("com.android.application")
     kotlin("android")
-    kotlin("android.extensions")
     kotlin("kapt")
+    id("kotlin-parcelize")
 }
 
 android {
@@ -74,12 +76,9 @@ android {
     }
 }
 
-val kotlinVersion = "1.4.20"
-val roomVersion = "2.2.5"
-
 dependencies {
     implementation(fileTree("dir" to "libs", "include" to "*.jar"))
-    implementation("org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib:${com.android.appname.buildsrc.Libs.Kotlin.VERSION}")
     implementation("androidx.core:core-ktx:1.3.2")
     implementation("androidx.appcompat:appcompat:1.2.0")
     implementation("androidx.fragment:fragment-ktx:1.3.0-beta02")
@@ -117,18 +116,21 @@ dependencies {
     implementation("io.reactivex.rxjava2:rxandroid:2.1.1")
     implementation("com.squareup.retrofit2:adapter-rxjava2:2.9.0")
 
-    api("com.google.dagger:dagger-android:2.30.1")
-    api("com.google.dagger:dagger-android-support:2.30.1")
-    kapt("com.google.dagger:dagger-android-processor:2.30.1")
-    kapt("com.google.dagger:dagger-compiler:2.30.1")
+    api("com.google.dagger:dagger-android:${Libs.Dagger.VERSION}")
+    api("com.google.dagger:dagger-android-support:${Libs.Dagger.VERSION}")
+    kapt("com.google.dagger:dagger-android-processor:${Libs.Dagger.VERSION}")
+    kapt("com.google.dagger:dagger-compiler:${Libs.Dagger.VERSION}")
     implementation("org.jetbrains.kotlin:kotlin-reflect:1.4.20")
     implementation("androidx.preference:preference-ktx:1.1.1")
 
     // Room
-    implementation("androidx.room:room-runtime:$roomVersion")
-    kapt("androidx.room:room-compiler:$roomVersion")
-    implementation("androidx.room:room-ktx:$roomVersion")
+    implementation("androidx.room:room-runtime:${Libs.Room.VERSION}")
+    kapt("androidx.room:room-compiler:${Libs.Room.VERSION}")
+    implementation("androidx.room:room-ktx:${Libs.Room.VERSION}")
     debugImplementation("com.amitshekhar.android:debug-db:1.0.6")
+
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${Libs.Coroutines.VERSION}")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:${Libs.Coroutines.VERSION}")
 }
 
 apply(from = "ci-kotlin.gradle")
