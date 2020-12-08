@@ -8,6 +8,8 @@ import android.view.*
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
 import com.android.appname.R
+import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.atomic.AtomicInteger
 
 /**
  * @author at-hungtruong
@@ -21,11 +23,9 @@ class LoadingDialogFragment : DialogFragment() {
         internal fun newInstance() = LoadingDialogFragment()
     }
 
-    @Volatile
-    private var isShowing = false
+    private val isShowing = AtomicBoolean(false)
 
-    @Volatile
-    private var requestShowingCount = 0
+    private val requestShowingCount = AtomicInteger(0)
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -59,9 +59,9 @@ class LoadingDialogFragment : DialogFragment() {
     }
 
     override fun show(manager: FragmentManager, tag: String?) {
-        requestShowingCount++
-        if (!isShowing) {
-            isShowing = true
+        requestShowingCount.incrementAndGet()
+        if (!isShowing.get()) {
+            isShowing.set(true)
             if (!isAdded) {
                 super.show(manager, tag)
             }
@@ -69,12 +69,12 @@ class LoadingDialogFragment : DialogFragment() {
     }
 
     override fun dismissAllowingStateLoss() {
-        if (isShowing && requestShowingCount > 0) {
-            requestShowingCount--
+        if (isShowing.get() && requestShowingCount.get() > 0) {
+            requestShowingCount.decrementAndGet()
         }
-        if (isShowing && requestShowingCount <= 0) {
-            isShowing = false
-            requestShowingCount = 0
+        if (isShowing.get() && requestShowingCount.get() <= 0) {
+            isShowing.set(false)
+            requestShowingCount.set(0)
             if (activity?.isFinishing == false) {
                 super.dismissAllowingStateLoss()
             }

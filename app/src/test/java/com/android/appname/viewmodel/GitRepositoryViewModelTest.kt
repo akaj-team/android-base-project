@@ -48,7 +48,7 @@ class GitRepositoryViewModelTest : BaseTest() {
         /* Given */
 
         /* When */
-        val gitRepositories = viewModel.gitRepoList()
+        val gitRepositories = viewModel.gitRepositories()
 
         /* Then */
         Assert.assertEquals(gitRepositories.size, 0)

@@ -43,10 +43,10 @@ abstract class ApplicationModuleBinds {
     @Singleton
     @GitRemoteDataSourceQualifier
     @Binds
-    abstract fun provideGitRemoteDataSource(remoteDataSource: GitRemoteDataSource): GitDataSource
+    abstract fun bindGitRemoteDataSource(remoteDataSource: GitRemoteDataSource): GitDataSource
 
     @Singleton
     @GitLocalDataSourceQualifier
     @Binds
-    abstract fun provideGitLocalDataSource(localDataSource: GitLocalDataSource): GitDataSource
+    abstract fun bindGitLocalDataSource(localDataSource: GitLocalDataSource): GitDataSource
 }

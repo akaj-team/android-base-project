@@ -15,6 +15,17 @@ sealed class RestResultWrapper<out T> {
     ) : Failure(throwable)
 
     data class NetworkError(override val throwable: Throwable?) : Failure(throwable)
+
+    internal fun onResultResponsed(
+        onSuccess: (Success<T>) -> Unit,
+        onFailure: (Failure) -> Unit
+    ) {
+        if (this is Success) {
+            onSuccess(this)
+        } else if (this is Failure) {
+            onFailure(this)
+        }
+    }
 }
 
 fun <T> T.toResultSuccess() = RestResultWrapper.Success(this)

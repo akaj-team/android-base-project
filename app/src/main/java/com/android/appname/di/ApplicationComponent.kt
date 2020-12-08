@@ -4,6 +4,7 @@ import android.content.Context
 import com.android.appname.App
 import dagger.BindsInstance
 import dagger.Component
+import dagger.android.AndroidInjectionModule
 import dagger.android.AndroidInjector
 import dagger.android.support.AndroidSupportInjectionModule
 import javax.inject.Singleton
@@ -16,6 +17,7 @@ import javax.inject.Singleton
     modules = [
         ApplicationModule::class,
         AndroidSupportInjectionModule::class,
+        AndroidInjectionModule::class,
         ActivityModules::class,
         FragmentModules::class,
         NetworkModule::class,

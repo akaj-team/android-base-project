@@ -3,7 +3,6 @@ package com.android.appname.ui.base
 import com.android.appname.di.MainViewModelFactory
 import dagger.android.support.DaggerFragment
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.disposables.Disposable
 import javax.inject.Inject
 
 abstract class BaseFragment : DaggerFragment() {
@@ -28,7 +27,7 @@ abstract class BaseFragment : DaggerFragment() {
         subscription.clear()
     }
 
-    protected fun addDisposables(vararg ds: Disposable) {
-        ds.forEach { subscription.add(it) }
+    internal fun setLoadingDialogVisibility(isVisible: Boolean) {
+        (activity as? BaseActivity)?.setLoadingDialogVisibility(isVisible)
     }
 }

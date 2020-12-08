@@ -1,20 +1,14 @@
 package com.android.appname.ui.git.repo
 
-import androidx.lifecycle.LiveData
 import com.android.appname.data.entities.RepositoryEntity
-import com.android.appname.data.model.GitRepoResponse
 import com.android.appname.data.model.RestResultWrapper
-import io.reactivex.Single
+import kotlinx.coroutines.flow.StateFlow
 
 interface GitRepositoryVMContract {
 
-    fun gitRepoList(): List<RepositoryEntity>
+    fun gitRepositories(): List<RepositoryEntity>
 
-    fun getRepositories(since: Long = 1L): Single<List<GitRepoResponse>>
+    fun requestRepositories(onSuccess: () -> Unit, onFailure: (RestResultWrapper.Failure) -> Unit)
 
-    fun getRepositorySuspend(since: Long = 1L, onFinished: () -> Unit)
-
-    fun getLoadingProgress(): LiveData<Boolean>
-
-    fun getResultFailureLiveData(): LiveData<RestResultWrapper.Failure>
+    fun getLoadingState(): StateFlow<Boolean>
 }

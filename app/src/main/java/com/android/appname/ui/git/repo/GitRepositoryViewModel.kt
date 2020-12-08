@@ -5,40 +5,36 @@ import com.android.appname.data.entities.RepositoryEntity
 import com.android.appname.data.model.RestResultWrapper
 import com.android.appname.data.source.GitRepository
 import com.android.appname.ui.base.BaseViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class GitRepositoryViewModel @Inject constructor(
     private val gitRepository: GitRepository
 ) : BaseViewModel(), GitRepositoryVMContract {
-    private val gitRepoList = mutableListOf<RepositoryEntity>()
+    private var requestRepositoriesSince = 1L
 
-    override fun gitRepoList() = gitRepoList
+    private val repositories = mutableListOf<RepositoryEntity>()
+    private val loadingState = MutableStateFlow(false)
 
-    override fun getRepositories(since: Long) = gitRepository.getRepositories(since)
-        .doOnSuccess {
-            gitRepoList.run {
-                clear()
-//                addAll(it)
-            }
-        }
+    override fun gitRepositories() = repositories
 
-    override fun getRepositorySuspend(since: Long, onFinished: () -> Unit) {
+    override fun requestRepositories(
+        onSuccess: () -> Unit,
+        onFailure: (RestResultWrapper.Failure) -> Unit
+    ) {
         viewModelScope.launch {
-            gitRepoList.clear()
-            loadingLiveData.postValue(true)
-            val result = gitRepository.getRepositorySuspend(since)
-            if (result is RestResultWrapper.Success) {
-                gitRepoList += result.value
-            } else if (result is RestResultWrapper.Failure) {
-                errorResultWrapperLiveData.postValue(result)
-            }
-            loadingLiveData.postValue(false)
-            onFinished()
+            repositories.clear()
+            loadingState.emit(true)
+            gitRepository.getRepositorySuspend(requestRepositoriesSince).onResultResponsed({
+                repositories += it.value
+                onSuccess()
+            }, {
+                onFailure(it)
+            })
+            loadingState.emit(false)
         }
     }
 
-    override fun getLoadingProgress() = loadingLiveData
-
-    override fun getResultFailureLiveData() = errorResultWrapperLiveData
+    override fun getLoadingState() = loadingState
 }

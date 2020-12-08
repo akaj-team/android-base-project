@@ -62,7 +62,7 @@ class NetworkModule {
     fun provideBearerTokenAuthentication(prefManager: PrefManager) = Interceptor { chain ->
         val request = chain.request().newBuilder().apply {
 
-            val token = prefManager.getString(SharedPreferencesKeys.ACCESS_TOKEN) ?: "273b9bb6b8a93071fb41bb7b0c5fc766dbb6bba8"
+            val token = prefManager.getString(SharedPreferencesKeys.ACCESS_TOKEN) ?: "e04d80a7ea31de47fa6dbb3663c73044835c5446"
             if (chain.request().tag(Invocation::class.java)?.method()
                     ?.getAnnotation(IgnoreAuthentication::class.java) == null
             ) {

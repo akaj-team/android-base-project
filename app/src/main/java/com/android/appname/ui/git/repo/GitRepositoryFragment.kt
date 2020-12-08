@@ -4,12 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.WebView
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.android.appname.R
-import com.android.appname.ui.base.BaseActivity
 import com.android.appname.ui.base.BaseFragment
 import kotlinx.android.synthetic.main.fragment_git_repo.*
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class GitRepositoryFragment : BaseFragment() {
@@ -30,30 +31,25 @@ class GitRepositoryFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         lifecycleScope.launch {
-            viewModel.getLoadingProgress().observe(viewLifecycleOwner) {
-                (activity as? BaseActivity)?.setLoadingDialogVisibility(it)
-            }
-            viewModel.getResultFailureLiveData().observe(viewLifecycleOwner) {
-                it.throwable?.printStackTrace()
-            }
+            viewModel.getLoadingState().collect { setLoadingDialogVisibility(it) }
         }
         initViews()
-        initData()
+        requestRepositories()
     }
 
     private fun initViews() {
-        rvGitRepo.adapter = GitRepoAdapter(viewModel.gitRepoList())
+        rvGitRepo.adapter = GitRepoAdapter(viewModel.gitRepositories())
         swipeRefresh.setOnRefreshListener {
-            viewModel.getRepositorySuspend {
-                rvGitRepo.adapter?.notifyDataSetChanged()
-                swipeRefresh.isRefreshing = false
-            }
+            requestRepositories()
         }
     }
 
-    private fun initData() {
-        viewModel.getRepositorySuspend {
+    private fun requestRepositories() {
+        viewModel.requestRepositories({
             rvGitRepo.adapter?.notifyDataSetChanged()
-        }
+            swipeRefresh.isRefreshing = false
+        }, {
+            it.throwable?.printStackTrace()
+        })
     }
 }
