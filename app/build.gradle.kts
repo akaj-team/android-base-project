@@ -10,7 +10,6 @@ plugins {
 
 android {
     compileSdkVersion(30)
-    buildToolsVersion = "29.0.3"
 
     defaultConfig {
         applicationId = "com.android.appname"
@@ -24,13 +23,10 @@ android {
 
     signingConfigs {
         getByName("debug") {
-            storeFile = rootProject.file("debug.keystore")
-            storePassword = ""
-            keyAlias = ""
-            keyPassword = ""
+            storeFile = rootProject.file("keystores/debug.jks")
         }
         create("release") {
-            storeFile = rootProject.file("release.keystore")
+            storeFile = rootProject.file("keystores/release.jks")
             storePassword = System.getenv("ANDROID_KEYSTORE_PASSWORD")
             keyAlias = System.getenv("ANDROID_KEYSTORE_ALIAS")
             keyPassword = System.getenv("ANDROID_KEYSTORE_PRIVATE_KEY_PASSWORD")
