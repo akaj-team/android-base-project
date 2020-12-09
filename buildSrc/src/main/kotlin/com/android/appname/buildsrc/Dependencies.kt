@@ -2,6 +2,10 @@ package com.android.appname.buildsrc
 
 object Libs {
 
+    object BuildGradle {
+        const val VERSION = "4.2.0-beta01"
+    }
+
     object Kotlin {
         const val VERSION = "1.4.20"
     }
