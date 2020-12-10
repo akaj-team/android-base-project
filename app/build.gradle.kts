@@ -10,7 +10,6 @@ plugins {
 
 android {
     compileSdkVersion(30)
-    buildToolsVersion = "29.0.3"
 
     defaultConfig {
         applicationId = "com.android.appname"
@@ -22,18 +21,30 @@ android {
         setTestInstrumentationRunner("androidx.test.runner.AndroidJUnitRunner")
     }
 
+    signingConfigs {
+        getByName("debug") {
+            storeFile = rootProject.file("keystores/debug.jks")
+        }
+        create("release") {
+            storeFile = rootProject.file("keystores/release.jks")
+            storePassword = System.getenv("ANDROID_KEYSTORE_PASSWORD")
+            keyAlias = System.getenv("ANDROID_KEYSTORE_ALIAS")
+            keyPassword = System.getenv("ANDROID_KEYSTORE_PRIVATE_KEY_PASSWORD")
+        }
+    }
+
     buildTypes {
         getByName("debug") {
             isDebuggable = true
             isMinifyEnabled = false
-            setSigningConfig(signingConfigs.getByName("debug"))
+            signingConfig = signingConfigs.getByName("debug")
             isTestCoverageEnabled = true
         }
 
         getByName("release") {
             isDebuggable = false
             isMinifyEnabled = true
-            setSigningConfig(signingConfigs.getByName("debug"))
+            signingConfig = signingConfigs.getByName("debug")
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -41,13 +52,13 @@ android {
         }
     }
 
-    this.applicationVariants.all {
+    this.applicationVariants.configureEach {
         when (name) {
             "debug" -> {
                 buildConfigField("String", "BASE_API_URL", "\"https://api.github.com/\"")
             }
             "release" -> {
-                buildConfigField("String", "BASE_API_URL", "\"\"")
+                buildConfigField("String", "BASE_API_URL", "\"https://api.github.com/\"")
             }
         }
     }
@@ -88,6 +99,10 @@ dependencies {
     // Test
     testImplementation("junit:junit:4.13.1")
     testImplementation("org.mockito:mockito-inline:2.21.0")
+    androidTestImplementation("org.mockito:mockito-android:2.21.0")
+    testImplementation("org.mockito:mockito-core:2.21.0")
+    testImplementation("net.bytebuddy:byte-buddy-agent:1.10.18")
+    testImplementation("net.bytebuddy:byte-buddy:1.10.18")
     testImplementation("org.hamcrest:hamcrest-core:2.2")
     testImplementation("com.squareup.okhttp3:mockwebserver:4.9.0")
     testImplementation("org.robolectric:robolectric:4.4")
@@ -134,5 +149,6 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:${Libs.Coroutines.VERSION}")
 }
 
-apply(from = "ci-kotlin.gradle")
-apply(from = "jacoco.gradle")
+apply(from = "ci-kotlin.gradle.kts")
+apply(from = "jacoco.gradle.kts")
+apply(from = "deploygate.gradle.kts")

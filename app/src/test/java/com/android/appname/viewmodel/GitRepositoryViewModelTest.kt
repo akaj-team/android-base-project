@@ -1,10 +1,10 @@
 package com.android.appname.viewmodel
 
-import android.sukedachi.jp.baseproject.util.RxSchedulersOverrideRule
 import com.android.appname.BaseTest
 import com.android.appname.data.model.GitRepoResponse
 import com.android.appname.data.source.GitRepository
 import com.android.appname.ui.git.repo.GitRepositoryViewModel
+import com.android.appname.util.RxSchedulersOverrideRule
 import io.reactivex.Single
 import io.reactivex.observers.TestObserver
 import org.hamcrest.CoreMatchers

@@ -1,26 +1,5 @@
-autoCorrect: true
-failFast: false
-
-test-pattern: # Configure exclusions for test sources
-  active: true
-  patterns: # Test file regexes
-    - '.*/test/.*'
-    - '.*Test.kt'
-    - '.*Spec.kt'
-    - '.*UI.kt'
-  exclude-rule-sets:
-    - 'comments'
-  exclude-rules:
-    - 'NamingRules'
-    - 'WildcardImport'
-    - 'MagicNumber'
-    - 'MaxLineLength'
-    - 'LateinitUsage'
-    - 'StringLiteralDuplication'
-
 build:
-  warningThreshold: 5
-  failThreshold: 10
+  maxIssues: -1
   weights:
     complexity: 2
     formatting: 1
@@ -29,7 +8,7 @@ build:
 
 processors:
   active: true
-  exclude:
+  exclude: []
   # - 'FunctionCountProcessor'
   # - 'PropertyCountProcessor'
   # - 'ClassCountProcessor'
@@ -39,10 +18,10 @@ processors:
 console-reports:
   active: true
   exclude:
-  #  - 'ProjectStatisticsReport'
-  #  - 'ComplexityReport'
-  #  - 'NotificationReport'
-  #  - 'FindingsReport'
+    #  - 'ProjectStatisticsReport'
+    #  - 'ComplexityReport'
+    #  - 'NotificationReport'
+    #  - 'FindingsReport'
     - 'BuildFailureReport'
 
 output-reports:
@@ -59,8 +38,6 @@ potential-bugs:
     active: false
   EqualsWithHashCodeExist:
     active: true
-  InvalidLoopCondition:
-    active: false
   WrongEqualsTypeParameter:
     active: false
   IteratorHasNextCallsNextMethod:
@@ -75,7 +52,7 @@ potential-bugs:
     active: true
   LateinitUsage:
     active: false
-    excludeAnnotatedProperties: ''
+    excludeAnnotatedProperties: ['']
     ignoreOnClassesPattern: ''
   UnsafeCallOnNullableType:
     active: false
@@ -97,36 +74,43 @@ exceptions:
   active: true
   ExceptionRaisedInUnexpectedLocation:
     active: false
-    methodNames: 'toString,hashCode,equals,finalize'
+    methodNames:
+      - 'toString'
+      - 'hashCode'
+      - 'equals'
+      - 'finalize'
   SwallowedException:
     active: false
   TooGenericExceptionCaught:
     active: true
-    exceptions:
-      - ArrayIndexOutOfBoundsException
-      - Error
-      - Exception
-      - IllegalMonitorStateException
-      - IndexOutOfBoundsException
-      - InterruptedException
-      - NullPointerException
-      - RuntimeException
-      - Throwable
+    exceptionNames:
+      - 'ArrayIndexOutOfBoundsException'
+      - 'Error'
+      - 'Exception'
+      - 'IllegalMonitorStateException'
+      - 'IndexOutOfBoundsException'
+      - 'InterruptedException'
+      - 'NullPointerException'
+      - 'RuntimeException'
+      - 'Throwable'
   TooGenericExceptionThrown:
     active: true
-    exceptions:
-      - Error
-      - Exception
-      - NullPointerException
-      - RuntimeException
-      - Throwable
+    exceptionNames:
+      - 'Error'
+      - 'Exception'
+      - 'NullPointerException'
+      - 'RuntimeException'
+      - 'Throwable'
   InstanceOfCheckForException:
     active: false
   NotImplementedDeclaration:
     active: false
   ThrowingExceptionsWithoutMessageOrCause:
     active: false
-    exceptions: 'IllegalArgumentException,IllegalStateException,IOException'
+    exceptions:
+      - 'IllegalArgumentException'
+      - 'IllegalStateException'
+      - 'IOException'
   PrintStackTrace:
     active: false
   RethrowCaughtException:
@@ -181,7 +165,8 @@ complexity:
     threshold: 3
   LongParameterList:
     active: true
-    threshold: 5
+    functionThreshold: 5
+    constructorThreshold: 5
   LargeClass:
     active: true
     threshold: 150
@@ -214,13 +199,6 @@ complexity:
     excludeStringsWithLessThan5Characters: true
     ignoreStringsRegex: '$^'
 
-code-smell:
-  active: true
-  FeatureEnvy:
-    threshold: 0.5
-    weight: 0.45
-    base: 0.5
-
 style:
   active: true
   ReturnCount:
@@ -241,23 +219,28 @@ style:
     active: false
   ForbiddenComment:
     active: false
-    values: 'TODO:,FIXME:,STOPSHIP:'
+    values:
+      - 'TODO:'
+      - 'FIXME:'
+      - 'STOPSHIP:'
   ForbiddenImport:
     active: false
-    imports: ''
+    imports:
+      - ''
   SpacingBetweenPackageAndImports:
     active: false
   LoopWithTooManyJumpStatements:
     active: false
     maxJumpCount: 1
-  MethodNameEqualsClassName:
-    active: false
-    ignoreOverriddenFunction: true
   ModifierOrder:
     active: true
   MagicNumber:
     active: true
-    ignoreNumbers: '-1,0,1,2'
+    ignoreNumbers:
+      - '-1'
+      - '0'
+      - '1'
+      - '2'
     ignoreHashCodeFunction: false
     ignorePropertyDeclaration: false
     ignoreConstantDeclaration: true
@@ -265,9 +248,16 @@ style:
     ignoreAnnotation: false
     ignoreNamedArgument: true
     ignoreEnums: false
+    excludes:
+      - '.*/test/.*'
+      - '.*Test.kt'
+      - '.*Spec.kt'
+      - '.*UI.kt'
   WildcardImport:
     active: false
-    excludeImports: 'java.util.*,kotlinx.android.synthetic.*'
+    excludeImports:
+      - 'java.util.*'
+      - 'kotlinx.android.synthetic.*'
   SafeCast:
     active: true
   MaxLineLength:
@@ -275,39 +265,6 @@ style:
     maxLineLength: 120
     excludePackageStatements: false
     excludeImportStatements: false
-  PackageNaming:
-    active: true
-    packagePattern: '^[a-z]+(\.[a-z][a-z0-9]*)*$'
-  ClassNaming:
-    active: true
-    classPattern: '[A-Z$][a-zA-Z$]*'
-  EnumNaming:
-    active: true
-    enumEntryPattern: '^[A-Z$][a-zA-Z_$]*$'
-  FunctionNaming:
-    active: true
-    functionPattern: '^([a-z$][a-zA-Z$0-9]*)|(`.*`)$'
-  FunctionMaxLength:
-    active: false
-    maximumFunctionNameLength: 30
-  FunctionMinLength:
-    active: false
-    minimumFunctionNameLength: 3
-  VariableNaming:
-    active: true
-    variablePattern: '^(_)?[a-z$][a-zA-Z$0-9]*$'
-  ConstantNaming:
-    active: true
-    constantPattern: '^([A-Z_]*|serialVersionUID)$'
-  VariableMaxLength:
-    active: false
-    maximumVariableNameLength: 30
-  VariableMinLength:
-    active: false
-    minimumVariableNameLength: 3
-  ForbiddenClassName:
-    active: false
-    forbiddenName: ''
   ProtectedMemberInFinalClass:
     active: false
   SerialVersionUIDInSerializableClass:
@@ -326,8 +283,6 @@ style:
   UnnecessaryAbstractClass:
     active: false
   OptionalUnit:
-    active: false
-  OptionalReturnKeyword:
     active: false
   ExpressionBodySyntax:
     active: false
@@ -356,12 +311,57 @@ comments:
     searchInInnerInterface: true
   UndocumentedPublicFunction:
     active: false
-
-# *experimental feature*
-# Migration rules can be defined in the same config file or a new one
-migration:
+  excludes:
+    - '.*/test/.*'
+    - '.*Test.kt'
+    - '.*Spec.kt'
+    - '.*UI.kt'
+naming:
   active: true
-  imports:
-    # your.package.Class: new.package.or.Class
-    # for example:
-    # io.gitlab.arturbosch.detekt.api.Rule: io.gitlab.arturbosch.detekt.rule.Rule
+  MemberNameEqualsClassName:
+    active: false
+    ignoreOverridden: true
+  PackageNaming:
+    active: true
+    packagePattern: '^[a-z]+(\.[a-z][a-z0-9]*)*$'
+  ClassNaming:
+    active: true
+    classPattern: '[A-Z$][a-zA-Z$]*'
+  EnumNaming:
+    active: true
+    enumEntryPattern: '^[A-Z$][a-zA-Z_$]*$'
+  FunctionNaming:
+    active: true
+    functionPattern: '^([a-z$][a-zA-Z$0-9]*)|(`.*`)$'
+  FunctionMaxLength:
+    active: false
+    maximumFunctionNameLength: 30
+  FunctionMinLength:
+    active: false
+    minimumFunctionNameLength: 3
+  VariableNaming:
+    active: true
+    variablePattern: '^(_)?[a-z$][a-zA-Z$0-9]*$'
+  TopLevelPropertyNaming:
+    active: true
+    constantPattern: '^([A-Z_]*|serialVersionUID)$'
+  ObjectPropertyNaming:
+    active: true
+    constantPattern: '^([A-Z_]*|serialVersionUID)$'
+  VariableMaxLength:
+    active: false
+    maximumVariableNameLength: 30
+  VariableMinLength:
+    active: false
+    minimumVariableNameLength: 3
+  ForbiddenClassName:
+    active: false
+    forbiddenName: [ '' ]
+
+  # Migration rules can be defined in the same config file or a new one
+  #migration:
+  #  active: true
+  #  imports:
+  # your.package.Class: new.package.or.Class
+  # for example:
+  # io.gitlab.arturbosch.detekt.api.Rule: io.gitlab.arturbosch.detekt.rule.Rule
