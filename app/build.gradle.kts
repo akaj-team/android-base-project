@@ -151,3 +151,4 @@ dependencies {
 
 apply(from = "ci-kotlin.gradle.kts")
 apply(from = "jacoco.gradle.kts")
+apply(from = "deploygate.gradle.kts")
