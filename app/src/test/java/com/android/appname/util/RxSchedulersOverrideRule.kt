@@ -1,4 +1,4 @@
-package android.sukedachi.jp.baseproject.util
+package com.android.appname.util
 
 import io.reactivex.Scheduler
 import io.reactivex.android.plugins.RxAndroidPlugins

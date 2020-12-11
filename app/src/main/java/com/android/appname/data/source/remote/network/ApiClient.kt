@@ -13,17 +13,25 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.lang.reflect.Type
 import java.util.*
 
-open class ApiClient private constructor(url: String? = null) {
+open class ApiClient private constructor(private val url: String) {
 
-    private var token: String? = "ac408a11f1472afcfa1101fc9d7ac854ed6ca96a"
-    private val baseUrl: String = if (url.isNullOrBlank()) BuildConfig.BASE_API_URL else url
+    companion object {
+        private val instances = mutableMapOf<String?, ApiClient>()
 
-    companion object : SingletonHolder<ApiClient, String>(::ApiClient)
+        internal fun getInstance(url: String = BuildConfig.BASE_API_URL) = instances.getOrPut(url, {
+            ApiClient(url)
+        })
 
-    val service: ApiService
-        get() {
-            return createService()
+        internal fun clearInstance() {
+            instances.clear()
         }
+    }
+
+    private var token: String? = "8dcc1542a16daaa11c0ed5c3b7add287fdb28ec1"
+
+    val service by lazy {
+        createService()
+    }
 
     private fun createService(): ApiService {
         val httpClientBuilder = OkHttpClient.Builder()
@@ -72,48 +80,12 @@ open class ApiClient private constructor(url: String? = null) {
         }
 
         val retrofit = Retrofit.Builder()
-            .baseUrl(baseUrl)
+            .baseUrl(url)
             .addConverterFactory(nullOnEmptyConverterFactory)
             .addConverterFactory(GsonConverterFactory.create(gson))
-//            .addCallAdapterFactory(CustomCallAdapterFactory.create())
+            .addCallAdapterFactory(CustomCallAdapterFactory.create())
             .client(client)
             .build()
         return retrofit.create(ApiService::class.java)
-    }
-}
-
-/**
- * Use this class to create singleton object with argument
- */
-open class SingletonHolder<out T, in A>(private var creator: (A?) -> T) {
-    @kotlin.jvm.Volatile
-    private var instance: T? = null
-
-    /**
-     * Generate instance for T class with argument A
-     */
-    fun getInstance(arg: A?): T {
-        val i = instance
-        if (i != null) {
-            return i
-        }
-
-        return synchronized(this) {
-            val i2 = instance
-            if (i2 != null) {
-                i2
-            } else {
-                val created = creator(arg)
-                instance = created
-                created
-            }
-        }
-    }
-
-    /**
-     * Clear current instance
-     */
-    fun clearInstance() {
-        instance = null
     }
 }
