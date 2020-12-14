@@ -1,15 +1,25 @@
 package com.android.appname.data.source.remote
 
-import com.android.appname.data.model.GitRepoResponse
+import com.android.appname.data.entities.RepositoryEntity
+import com.android.appname.data.model.RestResultWrapper
 import com.android.appname.data.source.datasource.GitDataSource
-import com.android.appname.data.source.remote.network.ApiClient
 import com.android.appname.data.source.remote.network.ApiService
-import io.reactivex.Single
+import com.android.appname.data.source.remote.network.SafeApiCallService
+import javax.inject.Inject
 
-class GitRemoteDataSource(private val apiService: ApiService = ApiClient.getInstance().service) :
-    GitDataSource {
+class GitRemoteDataSource @Inject constructor(
+    private val apiService: ApiService,
+    private val safeApiCall: SafeApiCallService
+) : GitDataSource {
+    override fun getRepositories(since: Long) = apiService.getRepositories(since)
 
-    override fun getRepositories(since: Long): Single<MutableList<GitRepoResponse>> {
-        return apiService.getRepositories(since)
-    }
+    override suspend fun getRepositorySuspend(since: Long): RestResultWrapper<List<RepositoryEntity>> =
+        safeApiCall.call {
+            apiService.getRepositorySuspend(since).map { response ->
+                response.toEntity()
+            }
+        }
+
+    override suspend fun insertRepositories(vararg repositories: RepositoryEntity) =
+        emptyList<Long>()
 }

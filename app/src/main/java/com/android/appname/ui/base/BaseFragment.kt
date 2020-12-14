@@ -1,5 +1,6 @@
 package com.android.appname.ui.base
 
+import com.android.appname.data.model.RestResultWrapper
 import com.android.appname.di.MainViewModelFactory
 import dagger.android.support.DaggerFragment
 import io.reactivex.disposables.CompositeDisposable
@@ -29,5 +30,36 @@ abstract class BaseFragment : DaggerFragment() {
 
     internal fun setLoadingDialogVisibility(isVisible: Boolean) {
         (activity as? BaseActivity)?.setLoadingDialogVisibility(isVisible)
+    }
+
+    protected open fun onApiFailure(failure: RestResultWrapper.Failure) {
+        // TODO: 12/14/20 Show global dialog
+        (activity as? BaseActivity)?.onApiFailure(failure)
+    }
+
+    protected open fun onApiUnauthorized() {
+        // TODO: 12/14/20 Handle unauthorized error
+        (activity as? BaseActivity)?.onApiUnauthorized()
+    }
+
+    internal fun <T> handleApiResult(
+        result: RestResultWrapper<T>,
+        onSuccess: ((RestResultWrapper<T>) -> Unit),
+        onFailure: ((RestResultWrapper.Failure) -> Unit) = this::onApiFailure,
+        onUnauthorized: (() -> Unit) = this::onApiUnauthorized,
+        doOnFinally: (() -> Unit)? = null
+    ) {
+        when (result) {
+            is RestResultWrapper.Success -> {
+                onSuccess(result)
+            }
+            is RestResultWrapper.UnauthorizedError -> {
+                onUnauthorized()
+            }
+            is RestResultWrapper.Failure -> {
+                onFailure(result)
+            }
+        }
+        doOnFinally?.invoke()
     }
 }

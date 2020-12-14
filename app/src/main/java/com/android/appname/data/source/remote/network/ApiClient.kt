@@ -83,7 +83,6 @@ open class ApiClient private constructor(private val url: String) {
             .baseUrl(url)
             .addConverterFactory(nullOnEmptyConverterFactory)
             .addConverterFactory(GsonConverterFactory.create(gson))
-            .addCallAdapterFactory(CustomCallAdapterFactory.create())
             .client(client)
             .build()
         return retrofit.create(ApiService::class.java)

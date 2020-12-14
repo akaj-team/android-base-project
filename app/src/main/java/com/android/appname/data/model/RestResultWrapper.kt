@@ -1,5 +1,7 @@
 package com.android.appname.data.model
 
+import com.android.appname.data.exceptions.UnauthorizedException
+
 /**
  * @author at-hungtruong
  */
@@ -16,15 +18,18 @@ sealed class RestResultWrapper<out T> {
 
     data class NetworkError(override val throwable: Throwable?) : Failure(throwable)
 
-    internal fun onResultResponsed(
+    object UnauthorizedError : Failure(UnauthorizedException)
+
+    internal fun doOnResultResponded(
         onSuccess: (Success<T>) -> Unit,
-        onFailure: (Failure) -> Unit
-    ) {
+        onFailure: ((Failure) -> Unit)? = null
+    ): RestResultWrapper<T> {
         if (this is Success) {
             onSuccess(this)
         } else if (this is Failure) {
-            onFailure(this)
+            onFailure?.let { it(this) }
         }
+        return this
     }
 }
 

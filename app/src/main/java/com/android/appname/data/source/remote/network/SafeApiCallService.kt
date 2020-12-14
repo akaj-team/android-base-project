@@ -17,6 +17,10 @@ import javax.inject.Inject
  * @author at-hungtruong
  */
 class SafeApiCallService @Inject constructor(private val gson: Gson) {
+    companion object {
+        private const val UNAUTHORIZED_STATUS_CODE = 400
+    }
+
     suspend fun <T> call(
         dispatcher: CoroutineDispatcher = Dispatchers.IO,
         predicated: suspend () -> T
@@ -29,11 +33,15 @@ class SafeApiCallService @Inject constructor(private val gson: Gson) {
                     RestResultWrapper.NetworkError(throwable)
                 }
                 is HttpException -> {
-                    RestResultWrapper.GenericError(
-                        throwable.code(),
-                        convertErrorBody(throwable),
-                        throwable
-                    )
+                    if (throwable.code() == UNAUTHORIZED_STATUS_CODE) {
+                        RestResultWrapper.UnauthorizedError
+                    } else {
+                        RestResultWrapper.GenericError(
+                            throwable.code(),
+                            convertErrorBody(throwable),
+                            throwable
+                        )
+                    }
                 }
                 else -> {
                     RestResultWrapper.GenericError(throwable = throwable)

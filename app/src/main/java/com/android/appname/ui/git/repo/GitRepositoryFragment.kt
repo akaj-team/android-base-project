@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.webkit.WebView
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.android.appname.R
@@ -45,11 +44,12 @@ class GitRepositoryFragment : BaseFragment() {
     }
 
     private fun requestRepositories() {
-        viewModel.requestRepositories({
-            rvGitRepo.adapter?.notifyDataSetChanged()
-            swipeRefresh.isRefreshing = false
-        }, {
-            it.throwable?.printStackTrace()
-        })
+        lifecycleScope.launch {
+            handleApiResult(viewModel.requestRepositoriesAsync().await(), {
+                rvGitRepo.adapter?.notifyDataSetChanged()
+            }, doOnFinally = {
+                swipeRefresh.isRefreshing = false
+            })
+        }
     }
 }
