@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.android.appname.data.model.RestResultWrapper
 import com.android.appname.di.MainViewModelFactory
+import com.android.appname.extension.alert
 import com.android.appname.managers.PrefManager
 import com.android.appname.ui.dialog.loading.LoadingDialogFragment
 import dagger.android.AndroidInjection
@@ -41,17 +42,24 @@ open class BaseActivity : AppCompatActivity(), HasAndroidInjector {
 
     internal open fun onApiFailure(failure: RestResultWrapper.Failure) {
         // TODO: 12/14/20 Show global dialog
+        alert("Error", failure.throwable?.message) {
+            this.cancelable = true
+        }.show()
         failure.throwable?.printStackTrace()
     }
 
     internal open fun onApiUnauthorized() {
         // TODO: 12/14/20 Handle unauthorized error
+        alert("Error", "Unauthorized") {
+            cancelable = false
+            positiveButton("OK")
+        }.show()
         preferencesManager?.clear()
     }
 
-    internal fun <T> handleApiResult(
+    internal fun <T> handleRestResultWrapper(
         result: RestResultWrapper<T>,
-        onSuccess: ((RestResultWrapper<T>) -> Unit),
+        onSuccess: ((RestResultWrapper.Success<T>) -> Unit),
         onFailure: ((RestResultWrapper.Failure) -> Unit) = this::onApiFailure,
         onUnauthorized: (() -> Unit) = this::onApiUnauthorized
     ) {

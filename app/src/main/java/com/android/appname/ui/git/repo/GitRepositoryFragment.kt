@@ -7,9 +7,10 @@ import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.android.appname.R
+import com.android.appname.extension.requestApi
 import com.android.appname.ui.base.BaseFragment
 import kotlinx.android.synthetic.main.fragment_git_repo.*
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.launch
 
 class GitRepositoryFragment : BaseFragment() {
@@ -29,9 +30,9 @@ class GitRepositoryFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        lifecycleScope.launch {
+        /*lifecycleScope.launch {
             viewModel.getLoadingState().collect { setLoadingDialogVisibility(it) }
-        }
+        }*/
         initViews()
         requestRepositories()
     }
@@ -45,10 +46,10 @@ class GitRepositoryFragment : BaseFragment() {
 
     private fun requestRepositories() {
         lifecycleScope.launch {
-            handleApiResult(viewModel.requestRepositoriesAsync().await(), {
-                rvGitRepo.adapter?.notifyDataSetChanged()
-            }, doOnFinally = {
+            requestApi(viewModel.requestRepositories().onCompletion {
                 swipeRefresh.isRefreshing = false
+            }, {
+                rvGitRepo.adapter?.notifyDataSetChanged()
             })
         }
     }

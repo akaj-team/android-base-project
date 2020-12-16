@@ -42,12 +42,11 @@ abstract class BaseFragment : DaggerFragment() {
         (activity as? BaseActivity)?.onApiUnauthorized()
     }
 
-    internal fun <T> handleApiResult(
+    internal fun <T> handleRestResultWrapper(
         result: RestResultWrapper<T>,
-        onSuccess: ((RestResultWrapper<T>) -> Unit),
+        onSuccess: ((RestResultWrapper.Success<T>) -> Unit),
         onFailure: ((RestResultWrapper.Failure) -> Unit) = this::onApiFailure,
-        onUnauthorized: (() -> Unit) = this::onApiUnauthorized,
-        doOnFinally: (() -> Unit)? = null
+        onUnauthorized: (() -> Unit) = this::onApiUnauthorized
     ) {
         when (result) {
             is RestResultWrapper.Success -> {
@@ -60,6 +59,5 @@ abstract class BaseFragment : DaggerFragment() {
                 onFailure(result)
             }
         }
-        doOnFinally?.invoke()
     }
 }

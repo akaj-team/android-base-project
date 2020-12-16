@@ -18,7 +18,7 @@ import javax.inject.Inject
  */
 class SafeApiCallService @Inject constructor(private val gson: Gson) {
     companion object {
-        private const val UNAUTHORIZED_STATUS_CODE = 400
+        private const val UNAUTHORIZED_STATUS_CODE = 401
     }
 
     suspend fun <T> call(

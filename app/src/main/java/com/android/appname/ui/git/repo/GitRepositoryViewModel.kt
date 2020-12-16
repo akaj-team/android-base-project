@@ -1,13 +1,11 @@
 package com.android.appname.ui.git.repo
 
-import androidx.lifecycle.viewModelScope
 import com.android.appname.data.entities.RepositoryEntity
 import com.android.appname.data.model.RestResultWrapper
 import com.android.appname.data.source.GitRepository
 import com.android.appname.ui.base.BaseViewModel
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.async
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 
 class GitRepositoryViewModel @Inject constructor(
@@ -20,18 +18,18 @@ class GitRepositoryViewModel @Inject constructor(
 
     override fun gitRepositories() = repositories
 
-    override suspend fun requestRepositoriesAsync(): Deferred<RestResultWrapper<List<RepositoryEntity>>> {
-        return viewModelScope.async {
+    override suspend fun requestRepositories() =
+        gitRepository.getRepositorySuspend(requestRepositoriesSince).onStart {
             repositories.clear()
             loadingState.emit(true)
-            val result =
-                gitRepository.getRepositorySuspend(requestRepositoriesSince).doOnResultResponded({
-                    repositories += it.value
-                })
+        }.onCompletion {
             loadingState.emit(false)
-            result
-        }
-    }
+        }.onEach {
+            repositories.clear()
+            (it as? RestResultWrapper.Success)?.run {
+                repositories += value
+            }
+        }.flowOn(Dispatchers.Default)
 
     override fun getLoadingState() = loadingState
 }

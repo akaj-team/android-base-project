@@ -62,7 +62,8 @@ class NetworkModule {
     fun provideBearerTokenAuthentication(prefManager: PrefManager) = Interceptor { chain ->
         val request = chain.request().newBuilder().apply {
 
-            val token = prefManager.getString(SharedPreferencesKeys.ACCESS_TOKEN) ?: "e04d80a7ea31de47fa6dbb3663c73044835c5446"
+            val token = prefManager.getString(SharedPreferencesKeys.ACCESS_TOKEN)
+                ?: "5142248910848172b6cc62cbb10518cfa0423585"
             if (chain.request().tag(Invocation::class.java)?.method()
                     ?.getAnnotation(IgnoreAuthentication::class.java) == null
             ) {
@@ -77,13 +78,12 @@ class NetworkModule {
     fun provideHttpClient(
         loggingInterceptor: HttpLoggingInterceptor,
         @Named(ACCESS_TOKEN_AUTHENTICATION_PROVIDER_NAMED) accessTokenInterceptor: Interceptor
-    ) =
-        OkHttpClient.Builder().apply {
-            readTimeout(HTTP_CLIENT_READ_TIMEOUT_SECONDS, TimeUnit.SECONDS)
-            writeTimeout(HTTP_CLIENT_WRITE_TIMEOUT_SECONDS, TimeUnit.SECONDS)
-            addInterceptor(loggingInterceptor)
-            addInterceptor(accessTokenInterceptor)
-        }.build()
+    ) = OkHttpClient.Builder().apply {
+        readTimeout(HTTP_CLIENT_READ_TIMEOUT_SECONDS, TimeUnit.SECONDS)
+        writeTimeout(HTTP_CLIENT_WRITE_TIMEOUT_SECONDS, TimeUnit.SECONDS)
+        addInterceptor(loggingInterceptor)
+        addInterceptor(accessTokenInterceptor)
+    }.build()
 
     @Provides
     @Singleton

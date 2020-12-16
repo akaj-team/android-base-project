@@ -12,7 +12,7 @@ import com.android.appname.data.entities.RepositoryEntity
 @Dao
 interface RepositoryDao {
     @Query("SELECT * FROM RepositoryEntity")
-    suspend fun getRepositories(): List<RepositoryEntity>
+    fun getRepositories(): List<RepositoryEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll(vararg repositories: RepositoryEntity): List<Long>

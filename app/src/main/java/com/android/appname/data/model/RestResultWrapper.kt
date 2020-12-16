@@ -1,6 +1,10 @@
 package com.android.appname.data.model
 
 import com.android.appname.data.exceptions.UnauthorizedException
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.flowOn
+import kotlin.coroutines.CoroutineContext
 
 /**
  * @author at-hungtruong
@@ -20,17 +24,8 @@ sealed class RestResultWrapper<out T> {
 
     object UnauthorizedError : Failure(UnauthorizedException)
 
-    internal fun doOnResultResponded(
-        onSuccess: (Success<T>) -> Unit,
-        onFailure: ((Failure) -> Unit)? = null
-    ): RestResultWrapper<T> {
-        if (this is Success) {
-            onSuccess(this)
-        } else if (this is Failure) {
-            onFailure?.let { it(this) }
-        }
-        return this
-    }
+    internal fun toFlow(context: CoroutineContext = Dispatchers.Default) =
+        flowOf(this).flowOn(context)
 }
 
 fun <T> T.toResultSuccess() = RestResultWrapper.Success(this)
