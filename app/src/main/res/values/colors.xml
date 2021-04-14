@@ -6,5 +6,6 @@
 
     <!--Color common-->
     <color name="lightGray">#FFCCCCCC</color>
+    <color name="white">#FFFFFF</color>
 
 </resources>

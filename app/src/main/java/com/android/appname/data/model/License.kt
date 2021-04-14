@@ -1,11 +1,17 @@
 package com.android.appname.data.model
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+/**
+ *
+ * @author mvn-vinhhuynh-dn
+ */
+@Serializable
 data class License(
-    @SerializedName("key") val key: String,
-    @SerializedName("name") val name: String,
-    @SerializedName("spdx_id") val spdxId: String,
-    @SerializedName("url") val url: String,
-    @SerializedName("node_id") val nodeId: String
+    @SerialName("key") val key: String,
+    @SerialName("name") val name: String,
+    @SerialName("spdx_id") val spdxId: String,
+    @SerialName("url") val url: String,
+    @SerialName("node_id") val nodeId: String
 )

@@ -1,28 +1,31 @@
 package com.android.appname.ui.base
 
+import android.os.Bundle
+import android.view.View
+import androidx.annotation.LayoutRes
 import androidx.fragment.app.Fragment
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.disposables.Disposable
+import androidx.lifecycle.loadingFlow
+import androidx.lifecycle.viewErrorFlow
+import com.android.appname.arch.extensions.collectFlow
 
-abstract class BaseFragment : Fragment() {
-    private val subscription: CompositeDisposable = CompositeDisposable()
+/**
+ *
+ * @author at-vinh.huynh
+ */
+abstract class BaseFragment(@LayoutRes val layoutId: Int) : Fragment(layoutId) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-    /**
-     * This function is used to define subscription
-     */
-    abstract fun onBindViewModel()
+        getViewModel()?.run {
+            collectFlow(viewErrorFlow) {
+                (activity as? BaseActivity)?.handleCommonError(it)
+            }
 
-    override fun onResume() {
-        super.onResume()
-        onBindViewModel()
+            collectFlow(loadingFlow) {
+                (activity as? BaseActivity)?.handleProgressDialogStatus(it)
+            }
+        }
     }
 
-    override fun onPause() {
-        super.onPause()
-        subscription.clear()
-    }
-
-    protected fun addDisposables(vararg ds: Disposable) {
-        ds.forEach { subscription.add(it) }
-    }
+    abstract fun getViewModel(): BaseViewModel?
 }

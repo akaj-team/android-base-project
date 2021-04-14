@@ -1,12 +1,11 @@
 package com.android.appname
 
-import android.app.Application
-import io.reactivex.plugins.RxJavaPlugins
+import androidx.multidex.MultiDexApplication
+import dagger.hilt.android.HiltAndroidApp
 
-class App : Application() {
-
-    override fun onCreate() {
-        super.onCreate()
-        RxJavaPlugins.setErrorHandler { }
-    }
-}
+/**
+ *
+ * @author at-vinh.huynh
+ */
+@HiltAndroidApp
+class App : MultiDexApplication()
