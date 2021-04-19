@@ -60,6 +60,12 @@ potential-bugs:
     active: false
   UselessPostfixExpression:
     active: false
+  GlobalCoroutineUsage:
+    active: true
+  RedundantSuspendModifier:
+    active: true
+  SuspendFunWithFlowReturnType:
+    active: true
 
 performance:
   active: true
