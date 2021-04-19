@@ -57,9 +57,12 @@ potential-bugs:
   UnsafeCallOnNullableType:
     active: false
   UnsafeCast:
-    active: false
+    active: true
   UselessPostfixExpression:
     active: false
+
+coroutines:
+  active: true
   GlobalCoroutineUsage:
     active: true
   RedundantSuspendModifier:
@@ -165,7 +168,7 @@ complexity:
   active: true
   LongMethod:
     active: true
-    threshold: 20
+    threshold: 30
   NestedBlockDepth:
     active: true
     threshold: 3
@@ -218,7 +221,7 @@ style:
   OptionalAbstractKeyword:
     active: true
   OptionalWhenBraces:
-    active: false
+    active: true
   CollapsibleIfStatements:
     active: false
   EqualsNullCall:
@@ -275,6 +278,9 @@ style:
     active: false
   SerialVersionUIDInSerializableClass:
     active: false
+  UnderscoresInNumericLiterals:
+    active: true
+    acceptableDecimalLength: 5
   UnnecessaryParentheses:
     active: false
   UnnecessaryInheritance:
@@ -302,6 +308,15 @@ style:
     active: false
     ignoreOverridableFunction: true
     excludedFunctions: 'describeContents'
+  RedundantExplicitType:
+    active: true
+
+formatting:
+  active: true
+  android: true
+  autoCorrect: true
+  NoUnitReturn:
+    active: true
 
 comments:
   active: true
@@ -310,11 +325,11 @@ comments:
   CommentOverPrivateProperty:
     active: true
   UndocumentedPublicClass:
-    active: false
-    searchInNestedClass: true
-    searchInInnerClass: true
-    searchInInnerObject: true
-    searchInInnerInterface: true
+    active: true
+    searchInNestedClass: false
+    searchInInnerClass: false
+    searchInInnerObject: false
+    searchInInnerInterface: false
   UndocumentedPublicFunction:
     active: false
   excludes:
