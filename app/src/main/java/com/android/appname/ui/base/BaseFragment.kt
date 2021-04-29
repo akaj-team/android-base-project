@@ -7,12 +7,18 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.loadingFlow
 import androidx.lifecycle.viewErrorFlow
 import com.android.appname.arch.extensions.collectFlow
+import com.android.appname.ui.widget.CustomProgressDialog
 
 /**
  *
  * @author at-vinh.huynh
  */
 abstract class BaseFragment(@LayoutRes val layoutId: Int) : Fragment(layoutId) {
+
+    private val progressDialog by lazy {
+        CustomProgressDialog.newInstance()
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -22,8 +28,19 @@ abstract class BaseFragment(@LayoutRes val layoutId: Int) : Fragment(layoutId) {
             }
 
             collectFlow(loadingFlow) {
-                (activity as? BaseActivity)?.handleProgressDialogStatus(it)
+                handleProgressDialogStatus(it)
             }
+        }
+    }
+
+    private fun handleProgressDialogStatus(isShow: Boolean) {
+        if (isShow) {
+            progressDialog.show(
+                childFragmentManager,
+                CustomProgressDialog::class.java.simpleName
+            )
+        } else {
+            progressDialog.dismissAllowingStateLoss()
         }
     }
 
