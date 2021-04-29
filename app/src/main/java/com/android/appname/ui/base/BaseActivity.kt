@@ -18,22 +18,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 abstract class BaseActivity(@LayoutRes layout: Int) : AppCompatActivity(layout) {
 
-    private val progressDialog by lazy {
-        CustomProgressDialog.newInstance()
-    }
-
     abstract fun afterViewCreated()
-
-    internal fun handleProgressDialogStatus(isShow: Boolean) {
-        if (isShow) {
-            progressDialog.show(
-                supportFragmentManager,
-                CustomProgressDialog::class.java.simpleName
-            )
-        } else {
-            progressDialog.dismissAllowingStateLoss()
-        }
-    }
 
     internal fun handleCommonError(errorModel: ErrorModel) {
     }

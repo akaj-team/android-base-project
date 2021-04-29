@@ -54,7 +54,7 @@ private fun <T> T.getErrorMutableSharedFlow(): MutableSharedFlow<ErrorModel> whe
     return flow ?: setTagIfAbsent(ERROR_FLOW_KEY, MutableSharedFlow())
 }
 
-fun <F, T> Flow<F>.bindLoading(t: T): Flow<F> where T : LoadingAware, T : ViewModel {
+fun <F, T> Flow<FlowResult<F>>.bindLoading(t: T): Flow<FlowResult<F>> where T : LoadingAware, T : ViewModel {
     return this
         .onStart {
             t.loadingMutableStateFlow.value = true
